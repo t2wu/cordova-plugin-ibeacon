@@ -121,7 +121,8 @@
         <source-file src="src/android/ILocationManagerCommand.java" target-dir="src/com/unarin/cordova/beacon" />
         <source-file src="src/android/PausableThreadPoolExecutor.java" target-dir="src/com/unarin/cordova/beacon" />
 
-		<source-file src="libs/android/altbeacon.jar" target-dir="libs" framework="true" />
+        <!--	<source-file src="libs/android/altbeacon.jar" target-dir="libs" framework="true" /> -->
+        <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
     </platform>
 
 </plugin>
