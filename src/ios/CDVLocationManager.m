@@ -113,6 +113,12 @@
 
 -(void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
     
+    if ([region isKindOfClass:[CLCircularRegion class]]) {
+        NSDictionary *cargo = @{@"manager": manager, @"region": region};
+        [NSNotificationCenter.defaultCenter postNotificationName:@"TimHackEnterRegion" object:cargo];
+        return;
+    }
+    
     [self.queue addOperationWithBlock:^{
         
         [self _handleCallSafely:^CDVPluginResult *(CDVInvokedUrlCommand *command) {
@@ -133,6 +139,11 @@
 }
 
 -(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    if ([region isKindOfClass:[CLCircularRegion class]]) {
+        NSDictionary *cargo = @{@"manager": manager, @"region": region};
+        [NSNotificationCenter.defaultCenter postNotificationName:@"TimHackExitRegion" object:cargo];
+        return;
+    }
 
     [self.queue addOperationWithBlock:^{
         
@@ -192,6 +203,10 @@
             
         } :nil :NO :self.delegateCallbackId];
     }];
+}
+
+- (void)locationManager:(CLLocationManager *)manager rangingBeaconsDidFailForRegion:(CLBeaconRegion *)region withError:(NSError *)error {
+    [[self getLogger] debugLog:@"rangingBeaconsDidFailForRegion: %@", error.description];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region {
