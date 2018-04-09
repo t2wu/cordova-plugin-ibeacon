@@ -90,130 +90,137 @@
 
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region {
     
-    [self.commandDelegate runInBackground:^{
-        
-        [[self getLogger] debugLog:@"didDetermineState: %@ for region: %@", [self regionStateAsString:state], region];
-        
-        NSMutableDictionary* dict = [NSMutableDictionary new];
-        
-        [dict setObject: [self jsCallbackNameForSelector:_cmd] forKey:@"eventType"];
-        [dict setObject:[self mapOfRegion:region] forKey:@"region"];
-        [dict setObject:[self regionStateAsString:state] forKey:@"state"];
-        
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
-        [pluginResult setKeepCallbackAsBool:YES];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.delegateCallbackId];
-    }];
+    if (manager == self.locationManager) {
+        [self.commandDelegate runInBackground:^{
+            
+            [[self getLogger] debugLog:@"didDetermineState: %@ for region: %@", [self regionStateAsString:state], region];
+            
+            NSMutableDictionary* dict = [NSMutableDictionary new];
+            
+            [dict setObject: [self jsCallbackNameForSelector:_cmd] forKey:@"eventType"];
+            [dict setObject:[self mapOfRegion:region] forKey:@"region"];
+            [dict setObject:[self regionStateAsString:state] forKey:@"state"];
+            
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+            [pluginResult setKeepCallbackAsBool:YES];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:self.delegateCallbackId];
+        }];
+    }
 }
 
 -(void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
-    
-    [self.queue addOperationWithBlock:^{
-        
-        [self _handleCallSafely:^CDVPluginResult *(CDVInvokedUrlCommand *command) {
+    if (manager == self.locationManager) {
+        [self.queue addOperationWithBlock:^{
             
-            [[self getLogger] debugLog:@"didEnterRegion: %@", region.identifier];
-            [[self getLogger] debugNotification:@"didEnterRegion: %@", region.identifier];
-            
-            NSMutableDictionary* dict = [NSMutableDictionary new];
-            [dict setObject:[self jsCallbackNameForSelector:(_cmd)] forKey:@"eventType"];
-            [dict setObject:[self mapOfRegion:region] forKey:@"region"];
-            
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
-            [pluginResult setKeepCallbackAsBool:YES];
-            return pluginResult;
+            [self _handleCallSafely:^CDVPluginResult *(CDVInvokedUrlCommand *command) {
+                
+                [[self getLogger] debugLog:@"didEnterRegion: %@", region.identifier];
+                [[self getLogger] debugNotification:@"didEnterRegion: %@", region.identifier];
+                
+                NSMutableDictionary* dict = [NSMutableDictionary new];
+                [dict setObject:[self jsCallbackNameForSelector:(_cmd)] forKey:@"eventType"];
+                [dict setObject:[self mapOfRegion:region] forKey:@"region"];
+                
+                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+                [pluginResult setKeepCallbackAsBool:YES];
+                return pluginResult;
 
-        } :nil :NO :self.delegateCallbackId];
-    }];
+            } :nil :NO :self.delegateCallbackId];
+        }];
+    }
 }
 
 -(void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
-
-    [self.queue addOperationWithBlock:^{
-        
-        [self _handleCallSafely:^CDVPluginResult *(CDVInvokedUrlCommand *command) {
+    if (manager == self.locationManager) {
+        [self.queue addOperationWithBlock:^{
             
-            [[self getLogger] debugLog:@"didExitRegion: %@", region.identifier];
-            [[self getLogger] debugNotification:@"didExitRegion: %@", region.identifier];
-            
-            NSMutableDictionary* dict = [NSMutableDictionary new];
-            [dict setObject:[self jsCallbackNameForSelector:(_cmd)] forKey:@"eventType"];
-            [dict setObject:[self mapOfRegion:region] forKey:@"region"];
-            
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
-            [pluginResult setKeepCallbackAsBool:YES];
-            return pluginResult;
-            
-        } :nil :NO :self.delegateCallbackId];
-    }];
+            [self _handleCallSafely:^CDVPluginResult *(CDVInvokedUrlCommand *command) {
+                
+                [[self getLogger] debugLog:@"didExitRegion: %@", region.identifier];
+                [[self getLogger] debugNotification:@"didExitRegion: %@", region.identifier];
+                
+                NSMutableDictionary* dict = [NSMutableDictionary new];
+                [dict setObject:[self jsCallbackNameForSelector:(_cmd)] forKey:@"eventType"];
+                [dict setObject:[self mapOfRegion:region] forKey:@"region"];
+                
+                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+                [pluginResult setKeepCallbackAsBool:YES];
+                return pluginResult;
+                
+            } :nil :NO :self.delegateCallbackId];
+        }];
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region {
-
-    [self.queue addOperationWithBlock:^{
-        
-        [self _handleCallSafely:^CDVPluginResult *(CDVInvokedUrlCommand *command) {
+    if (manager == self.locationManager) {
+        [self.queue addOperationWithBlock:^{
             
-            [[self getLogger] debugLog:@"didStartMonitoringForRegion: %@", region];
-            
-            NSMutableDictionary* dict = [NSMutableDictionary new];
-            [dict setObject:[self jsCallbackNameForSelector :_cmd] forKey:@"eventType"];
-            [dict setObject:[self mapOfRegion:region] forKey:@"region"];
-            
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
-            [pluginResult setKeepCallbackAsBool:YES];
-            return pluginResult;
-            
-        } :nil :NO :self.delegateCallbackId];
-    }];
+            [self _handleCallSafely:^CDVPluginResult *(CDVInvokedUrlCommand *command) {
+                
+                [[self getLogger] debugLog:@"didStartMonitoringForRegion: %@", region];
+                
+                NSMutableDictionary* dict = [NSMutableDictionary new];
+                [dict setObject:[self jsCallbackNameForSelector :_cmd] forKey:@"eventType"];
+                [dict setObject:[self mapOfRegion:region] forKey:@"region"];
+                
+                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+                [pluginResult setKeepCallbackAsBool:YES];
+                return pluginResult;
+                
+            } :nil :NO :self.delegateCallbackId];
+        }];
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error {
-    
-    [self.queue addOperationWithBlock:^{
-        
-        [self _handleCallSafely:^CDVPluginResult *(CDVInvokedUrlCommand *command) {
+    if (manager == self.locationManager) {
+        [self.queue addOperationWithBlock:^{
             
-            [[self getLogger] debugLog:@"monitoringDidFailForRegion: %@", error.description];
-            
-            NSMutableDictionary* dict = [NSMutableDictionary new];
-            [dict setObject:[self jsCallbackNameForSelector :_cmd] forKey:@"eventType"];
-            [dict setObject:[self mapOfRegion:region] forKey:@"region"];
-            [dict setObject:error.description forKey:@"error"];
-            
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dict];
-            [pluginResult setKeepCallbackAsBool:YES];
-            return pluginResult;
-            
-        } :nil :NO :self.delegateCallbackId];
-    }];
+            [self _handleCallSafely:^CDVPluginResult *(CDVInvokedUrlCommand *command) {
+                
+                [[self getLogger] debugLog:@"monitoringDidFailForRegion: %@", error.description];
+                
+                NSMutableDictionary* dict = [NSMutableDictionary new];
+                [dict setObject:[self jsCallbackNameForSelector :_cmd] forKey:@"eventType"];
+                [dict setObject:[self mapOfRegion:region] forKey:@"region"];
+                [dict setObject:error.description forKey:@"error"];
+                
+                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dict];
+                [pluginResult setKeepCallbackAsBool:YES];
+                return pluginResult;
+                
+            } :nil :NO :self.delegateCallbackId];
+        }];
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region {
-    
-    NSMutableArray* beaconsMapsArray = [NSMutableArray new];
-    for (CLBeacon* beacon in beacons) {
-        NSDictionary* dictOfBeacon = [self mapOfBeacon:beacon];
-        [beaconsMapsArray addObject:dictOfBeacon];
-    }
-    
-    [self.queue addOperationWithBlock:^{
+    if (manager == self.locationManager) {
+        NSMutableArray* beaconsMapsArray = [NSMutableArray new];
+        for (CLBeacon* beacon in beacons) {
+            NSDictionary* dictOfBeacon = [self mapOfBeacon:beacon];
+            [beaconsMapsArray addObject:dictOfBeacon];
+        }
         
-        [self _handleCallSafely:^CDVPluginResult *(CDVInvokedUrlCommand *command) {
+        [self.queue addOperationWithBlock:^{
             
-            [[self getLogger] debugLog:@"didRangeBeacons: %@", beacons];
-            
-            NSMutableDictionary* dict = [[NSMutableDictionary alloc]init];
-            [dict setObject:[self jsCallbackNameForSelector :_cmd] forKey:@"eventType"];
-            [dict setObject:[self mapOfRegion:region] forKey:@"region"];
-            [dict setObject:beaconsMapsArray forKey:@"beacons"];
-            
-            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
-            [pluginResult setKeepCallbackAsBool:YES];
-            return pluginResult;
-            
-        } :nil :NO :self.delegateCallbackId];
-    }];
+            [self _handleCallSafely:^CDVPluginResult *(CDVInvokedUrlCommand *command) {
+                
+                [[self getLogger] debugLog:@"didRangeBeacons: %@", beacons];
+                
+                NSMutableDictionary* dict = [[NSMutableDictionary alloc]init];
+                [dict setObject:[self jsCallbackNameForSelector :_cmd] forKey:@"eventType"];
+                [dict setObject:[self mapOfRegion:region] forKey:@"region"];
+                [dict setObject:beaconsMapsArray forKey:@"beacons"];
+                
+                CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dict];
+                [pluginResult setKeepCallbackAsBool:YES];
+                return pluginResult;
+                
+            } :nil :NO :self.delegateCallbackId];
+        }];
+    }
 }
 
 
